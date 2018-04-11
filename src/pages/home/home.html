@@ -1,30 +1,22 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar> 
-  <ion-searchbar  (ionInput)="onInput($event)">
-  </ion-searchbar>
+    <ion-searchbar
+      (ionInput)="onInput($event)">
+    </ion-searchbar>
+  </ion-navbar>
 </ion-header>
-
 <ion-content padding>
   <p>
-
-    <ion-list>
-       
-      <ion-item *ngIf="results.length < 1 ">
-        aucun résulat
+    <ion-list> 
+      <ion-item *ngIf = "results.length < 1 | async">Aucun Résultat</ion-item>
+      <ion-item *ngFor = "let current of results | async">
+        <ion-thumbnail item-start>
+          <img [src]='"https://image.tmdb.org/t/p/original/".concat(current.poster_path)'>
+        </ion-thumbnail>
+        <h2>{{current.title}}</h2>
+        <p>Date : {{current.release_date}} • Vote : {{current.vote_average}}</p>
+        <button ion-button clear item-end [navPush]="detailsPage" [navParams]="current">View</button>
       </ion-item>
-        <ion-item *ngFor="let current of results">
-          <ion-thumbnail item-start>
-            <img [src]="current.image">
-          </ion-thumbnail>
-          <h2>{{current.title}}</h2>
-          <p>{{current.author}} {{current.date}}</p>
-          <button ion-button clear item-end>View</button>
-        </ion-item>
-    
     </ion-list>
-  </p>
-</ion-content>
+   </p>
+</ion-content> 

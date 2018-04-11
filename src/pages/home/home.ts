@@ -1,33 +1,40 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { DetailsPage } from '../details/details';
+import {APIkeyTMDB} from '../../app/tmdb';
 
+import { Observable } from 'rxjs/Observable';
+import { HttpClient } from '@angular/common/http';
 
-
-export interface Results{
-  title : string ; 
-  author : string ;
-  image : string ;
-  date : string ;
-
+export interface Result {
+  release_date : string;
+  //id : number;
+  overview : string;
+  title : string;
+  poster_path : string;
+  vote_average : number;
 }
-const fakeresultats: Results[]=[
-    {title : 'batman begins', author: 'Nolan', date: '2005', image:'https://image.tmdb.org/t/p/w600_and_h900_bestv2/zfVFOo2XCHbeA0mXbst42TAGhfC.jpg'},
-    {title : 'harry potter 1', author: 'JK Row', date: ' 16 Novembre 2001', image:'https://image.tmdb.org/t/p/w600_and_h900_bestv2/4bUd3nUGD2XnhLkYNCXHFjPHEH5.jpg'}
-];
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html',
-
+  templateUrl: 'home.html'
 })
 export class HomePage {
-  results : Results[];
-  constructor(public navCtrl: NavController) {
-    this.results = [];
+  detailsPage : any;
+  results : Observable<Result[]>;
+  url : string;
+
+  constructor(public http : HttpClient) {
+    this.results = Observable.of([]);
+    this.detailsPage = DetailsPage;
+    this.url = "https://api.themoviedb.org/3/search/movie";
   }
+
   onInput(event : any) : void{
     const query : string = event.target.value;
-    this.results = query? fakeresultats : [];
+    this.results = query? this.fetchResults(query) : Observable.of([]);
   }
- 
+
+  fetchResults(query : string) : Observable<Result[]> {
+    return this.http.get<Result[]>(this.url,{params : {api_key : APIkeyTMDB, language : "fr", query : query}}).pluck("results");
+  }
 }
