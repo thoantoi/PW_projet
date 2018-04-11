@@ -6,7 +6,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  <p>
+  <p> 
     <ion-list> 
       <ion-item *ngIf = "results.length < 1 | async">Aucun Résultat</ion-item>
       <ion-item *ngFor = "let current of results | async">
